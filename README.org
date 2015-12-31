@@ -1,0 +1,43 @@
+#+Title: C version of Lexical Scanning in Go by Rob Pike
+
+* Note
+This is a quick implementation of a lexer presented by Rob Pike in C.
+
+To match the original Go version, variables and function names are
+kept as in Go's, no memory boundary test isn't done to reduce code
+diff; Especially, C does not have String nor Slice.
+
+Because C does not have Channel, emitter is just a wrapper for
+printf(). It might be better to give a call back function to the lexer
+from caller.
+
+Also, C does not have ability to define methods on type, all lexer
+methods are defined with prefix `lexer_'.
+
+C is not capable to define a function returning a pointer to a
+function with the same signature.  To overcome this limitation, void
+pointer is used as the return type.  C seems to allow function pointer
+-> void pointer -> function pointer round trip.
+
+* Reference
+- video: https://www.youtube.com/watch?v=HxaD_trXwRE
+- slide: http://cuddle.googlecode.com/hg/talk/lex.html#title-slide
+- later comment: https://groups.google.com/forum/#!msg/golang-nuts/q--5t2cxv78/Vkr9bNuhP5sJ
+  #+BEGIN_QUOTE
+  That talk was about a lexer, but the deeper purpose was to demonstrate
+  how concurrency can make programs nice even without obvious
+  parallelism in the problem. And like many such uses of concurrency,
+  the code is pretty but not necessarily fast.
+
+  I think it's a fine approach to a lexer if you don't care about
+  performance. It is significantly slower than some other approaches but
+  is very easy to adapt. I used it in ivy, for example, but just so you
+  know, I'm probably going to replace the one in ivy with a more
+  traditional model to avoid some issues with the lexer accessing global
+  state. You don't care about that for your application, I'm sure.
+
+  So: It's pretty and nice to work on, but you'd probably not choose
+  that approach for a production compiler.
+
+  -rob
+  #+END_QUOTE
